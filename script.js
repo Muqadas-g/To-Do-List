@@ -42,11 +42,13 @@ document.addEventListener('DOMContentLoaded', () => {
             taskList.appendChild(noTasksMessage);
         }
 
+
         filteredTasks.forEach(task => {
             const listItem = document.createElement('li');
             listItem.className = `task-item ${task.completed ? 'completed' : ''}`;
             listItem.dataset.id = task.id; // Store task ID for easy reference
 
+            // Using contenteditable for inline editing
             listItem.innerHTML = `
                 <div class="task-content">
                     <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} aria-label="Mark task as complete">
@@ -111,10 +113,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Toggle contenteditable
             const isEditable = spanElement.contentEditable === 'true';
             spanElement.contentEditable = !isEditable;
-            spanElement.focus(); // Focus on the span to allow editing
 
             if (!isEditable) { // Just enabled editing
                 spanElement.classList.add('editing');
+                spanElement.focus(); // Focus on the span to allow editing
                 // Select all text when starting to edit
                 const range = document.createRange();
                 range.selectNodeContents(spanElement);
@@ -133,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 // Remove selection after editing
                 window.getSelection().removeAllRanges();
+                renderTasks(); // Re-render to ensure UI reflects saved state and remove focus styling
             }
         }
     }
@@ -180,6 +183,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (e.target.closest('.delete-btn')) { // Use closest for icon clicks
             deleteTask(taskId);
         } else if (e.target.closest('.edit-btn')) { // Use closest for icon clicks
+            // Only allow editing if not already being edited
+            if (taskTextSpan.contentEditable !== 'true') {
+                editTask(taskId, taskTextSpan);
+            }
+        } else if (e.target.classList.contains('task-text') && taskTextSpan.contentEditable !== 'true') {
+            // Allow clicking on text to start editing
             editTask(taskId, taskTextSpan);
         }
     });

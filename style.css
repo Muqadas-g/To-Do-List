@@ -102,6 +102,36 @@ h1 .fas {
     box-shadow: none;
 }
 
+/* Shake animation for empty input */
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+#taskInput.shake {
+    animation: shake 0.3s ease-in-out;
+    border-color: #dc3545;
+    /* Red border for shake */
+}
+
+
 .filter-section {
     display: flex;
     justify-content: center;
@@ -156,6 +186,20 @@ h1 .fas {
     position: relative;
     overflow: hidden;
     /* For transition effects */
+    animation: taskFadeIn 0.5s ease-out;
+    /* Fade-in for individual tasks */
+}
+
+@keyframes taskFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .task-item:hover {
@@ -200,14 +244,17 @@ h1 .fas {
     color: #333;
     word-break: break-word;
     flex-grow: 1;
-    cursor: text;
-    /* Indicate editable text */
+    cursor: pointer;
+    /* Indicate it's interactive */
 }
 
-.task-text:focus {
+.task-text.editing {
     outline: 2px solid #007bff;
     border-radius: 5px;
     padding: 2px 5px;
+    background-color: #e6f7ff;
+    /* Light blue background when editing */
+    cursor: text;
 }
 
 .task-actions {
@@ -271,6 +318,13 @@ h1 .fas {
     border-radius: 10px;
     margin-top: 20px;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.no-tasks .far,
+.no-tasks .fas {
+    /* Style icons within no-tasks message */
+    margin-right: 8px;
+    color: #999;
 }
 
 /* Responsive Design */
